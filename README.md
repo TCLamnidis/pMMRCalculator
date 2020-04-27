@@ -5,13 +5,13 @@ _Mathematical equations added to README using [this tool](https://www.codecogs.c
 
 ## Available options:
 ```
-usage: pMMRCalculator.py [-h] -i <INPUT FILES PREFIX> [-o <OUTPUT FILE>]
-                         [-s <INPUT FILES SUFFIX>]
+usage: pMMRCalculator.py [-h] [-i <INPUT FILES PREFIX>] [-o <OUTPUT FILE>]
+                         [-s <INPUT FILES SUFFIX>] [-v]
 
 Calculate the pairwise mismatch rate of genotyped between all individuals in
 the input eigenstrat dataset.
 
-optional arguments:
+Available options:
   -h, --help            show this help message and exit
   -i <INPUT FILES PREFIX>, --Input <INPUT FILES PREFIX>
                         The desired input file prefix. Input files are assumed
@@ -24,6 +24,8 @@ optional arguments:
                         to be <INPUT PREFIX>.geno<INPUT SUFFIX>, <INPUT
                         PREFIX>.snp<INPUT SUFFIX> and <INPUT PREFIX>.ind<INPUT
                         SUFFIX> .
+  -v, --version         Print the version of the script and exit.
+
 ```
 
 ## Usage example:
