@@ -50,6 +50,7 @@ def pMMR(genos, pMMRTable, ntot):
 ## MAIN ##
 ## Parse arguments
 parser = argparse.ArgumentParser(description="Calculate the pairwise mismatch rate of genotyped between all individuals in the input eigenstrat dataset.")
+parser._optionals.title = "Available options"
 parser.add_argument("-i", "--Input", type=str, metavar="<INPUT FILES PREFIX>", required=False, help="The desired input file prefix. Input files are assumed to be <INPUT PREFIX>.geno, <INPUT PREFIX>.snp and <INPUT PREFIX>.ind .")
 parser.add_argument("-o", "--Output", type=argparse.FileType('w'), metavar="<OUTPUT FILE>", required=False, help="The desired output file name. Omit to print to stdout.")
 parser.add_argument("-s", "--Suffix", type=str, metavar="<INPUT FILES SUFFIX>", default='', required=False, help="The desired input file suffix. Input files are assumed to be <INPUT PREFIX>.geno<INPUT SUFFIX>, <INPUT PREFIX>.snp<INPUT SUFFIX> and <INPUT PREFIX>.ind<INPUT SUFFIX> .")
