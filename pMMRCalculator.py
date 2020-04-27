@@ -2,6 +2,8 @@
 import sys, argparse
 from operator import add
 
+VERSION = "1.0.2"
+
 ## A function to return the number of lines of a file
 def file_len(fname):
     with open(fname) as f:
@@ -51,7 +53,13 @@ parser = argparse.ArgumentParser(description="Calculate the pairwise mismatch ra
 parser.add_argument("-i", "--Input", type=str, metavar="<INPUT FILES PREFIX>", required=True, help="The desired input file prefix. Input files are assumed to be <INPUT PREFIX>.geno, <INPUT PREFIX>.snp and <INPUT PREFIX>.ind .")
 parser.add_argument("-o", "--Output", type=argparse.FileType('w'), metavar="<OUTPUT FILE>", required=False, help="The desired output file name. Omit to print to stdout.")
 parser.add_argument("-s", "--Suffix", type=str, metavar="<INPUT FILES SUFFIX>", default='', required=False, help="The desired input file suffix. Input files are assumed to be <INPUT PREFIX>.geno<INPUT SUFFIX>, <INPUT PREFIX>.snp<INPUT SUFFIX> and <INPUT PREFIX>.ind<INPUT SUFFIX> .")
+parser.add_argument("-v", "--version", action="store_true", help="Print the version of the script and exit.")
 args = parser.parse_args()
+
+## Print version and exit
+if args.version:
+    print(VERSION, file=sys.stderr)
+    sys.exit(0)
 
 ## Open input files
 IndFile = open(args.Input+".ind"+args.Suffix, "r")
