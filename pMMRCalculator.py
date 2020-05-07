@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
-import sys, argparse
+import sys, argparse, json, os
 from operator import add
+from collections import OrderedDict
 
-VERSION = "1.0.2"
+VERSION = "1.0.4"
 
 ## A function to return the number of lines of a file
 def file_len(fname):
@@ -52,9 +53,10 @@ def pMMR(genos, pMMRTable, ntot):
 parser = argparse.ArgumentParser(description="Calculate the pairwise mismatch rate of genotyped between all individuals in the input eigenstrat dataset.")
 parser._optionals.title = "Available options"
 parser.add_argument("-i", "--Input", type=str, metavar="<INPUT FILES PREFIX>", required=False, help="The desired input file prefix. Input files are assumed to be <INPUT PREFIX>.geno, <INPUT PREFIX>.snp and <INPUT PREFIX>.ind .")
-parser.add_argument("-o", "--Output", type=argparse.FileType('w'), metavar="<OUTPUT FILE>", required=False, help="The desired output file name. Omit to print to stdout.")
+parser.add_argument("-o", "--Output", type=str, metavar="<OUTPUT FILE>", required=False, help="The desired output file name. Omit to print to stdout.")
 parser.add_argument("-s", "--Suffix", type=str, metavar="<INPUT FILES SUFFIX>", default='', required=False, help="The desired input file suffix. Input files are assumed to be <INPUT PREFIX>.geno<INPUT SUFFIX>, <INPUT PREFIX>.snp<INPUT SUFFIX> and <INPUT PREFIX>.ind<INPUT SUFFIX> .")
 parser.add_argument("-v", "--version", action="store_true", help="Print the version of the script and exit.")
+parser.add_argument("-j", "--json", action="store_true", help="Create additional json formatted output file named <OUTPUT FILE>.json . [Default: 'pmmrcalculator_output.json']")
 args = parser.parse_args()
 
 ## Print version and exit
@@ -70,9 +72,16 @@ if args.Input == None:
 IndFile = open(args.Input+".ind"+args.Suffix, "r")
 GenoFile = open(args.Input+".geno"+args.Suffix, "r")
 
-## Set output to stdout if the option is omitted.
+## Set output to stdout if the option is omitted. If no output is specified set json output to 'pmmrcalculator_output.json'.
 if args.Output == None:
-    args.Output = sys.stdout
+    outFile = sys.stdout
+    if args.json:
+        json_output = open("pmmrcalculator_output.json", "w")
+## If an output is specified, open output file and set json output to '<OUTPUT FILE>.json', after omitting the file suffix (if present).
+else:
+    outFile = open(args.Output, "w")
+    if args.json:
+        json_output = open(os.path.splitext(args.Output)[0]+".json", "w")
 
 ## Calculate statistics for each input file.
 linesGeno=[file_len(args.Input+".geno"+args.Suffix), file_width(args.Input+".geno"+args.Suffix)]
@@ -118,12 +127,19 @@ for line in GenoFile:
 # print (pMMRTable)
 
 ## Print results
-print ("Ind1","Ind2","nSNPs","nMismatch","pMismatch", sep="\t",file=args.Output)
+data=OrderedDict()
+# Add in proper tool version info to JSON output
+data['Metadata'] = {'tool_name' : "pMMRCalculator", "version" : VERSION}
+
+print ("Ind1","Ind2","nSNPs","nMismatch","pMismatch", sep="\t",file=outFile)
 for ind1 in range(0,len(Inds)-1):
     for ind2 in range(ind1+1,len(Inds)):
         newidx=ind2-(ind1+1)
-        print (Inds[ind1],Inds[ind2], ntot[ind1][newidx], pMMRTable[ind1][newidx], "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx]), sep="\t", file=args.Output)
+        print (Inds[ind1],Inds[ind2], ntot[ind1][newidx], pMMRTable[ind1][newidx], "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx]), sep="\t", file=outFile)
+        data[Inds[ind1]+"-"+Inds[ind2]]={"nSNPs" : ntot[ind1][newidx], "nMismatch" : pMMRTable[ind1][newidx], "pMismatch" : "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx])}
 # print (Inds[1])
 # print("INDS: ",linesInd, file=sys.stdout)
 # print("SNPs: ",linesSnp, file=sys.stdout)
 # print("GENOs: ",linesGeno, file=sys.stdout)
+if args.json:
+    json.dump(data,json_output)
