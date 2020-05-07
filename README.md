@@ -6,7 +6,7 @@ _Mathematical equations added to README using [this tool](https://www.codecogs.c
 ## Available options:
 ```
 usage: pMMRCalculator.py [-h] [-i <INPUT FILES PREFIX>] [-o <OUTPUT FILE>]
-                         [-s <INPUT FILES SUFFIX>] [-v]
+                         [-s <INPUT FILES SUFFIX>] [-v] [-j]
 
 Calculate the pairwise mismatch rate of genotyped between all individuals in
 the input eigenstrat dataset.
@@ -25,7 +25,9 @@ Available options:
                         PREFIX>.snp<INPUT SUFFIX> and <INPUT PREFIX>.ind<INPUT
                         SUFFIX> .
   -v, --version         Print the version of the script and exit.
-
+  -j, --json            Create additional json formatted output file named
+                        <OUTPUT FILE>.json . [Default:
+                        'pmmrcalculator_output.json']
 ```
 
 ## Usage example:
