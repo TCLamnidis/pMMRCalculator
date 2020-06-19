@@ -3,7 +3,7 @@ import sys, argparse, json, os
 from operator import add
 from collections import OrderedDict
 
-VERSION = "1.0.4"
+VERSION = "1.0.5"
 
 ## A function to return the number of lines of a file
 def file_len(fname):
@@ -15,6 +15,7 @@ def file_len(fname):
 ## A function to return the number of lines, as well as the last line with a SNP on chr 22. (assumes .snp file is sorted by ascending chr)
 def file_len_snp(fname):
     switch=True
+    stop_line=None
     with open(fname) as f:
         for i, l in enumerate(f):
             if switch and int(l.strip().split()[1]) > 22:
@@ -22,6 +23,9 @@ def file_len_snp(fname):
                 switch=False
                 # print(stop_line)
             pass
+        ## If the snp file does not contain any non-autosomal sites, then all lines should be considered.
+        if stop_line == None:
+            stop_line = i+1
     return (i + 1, stop_line)
 
 ## A function to return the number of genotypes per line in a .geno file. 
