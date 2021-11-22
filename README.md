@@ -1,4 +1,5 @@
 # pMMRCalculator
+[![install with bioconda](https://img.shields.io/badge/install%20with-bioconda-brightgreen.svg)](https://bioconda.github.io/)  
 A small python tool to calculate pairwise mismatch rate between all individuals in an EigenStrat dataset.
 
 _Mathematical equations added to README using [this tool](https://www.codecogs.com/latex/eqneditor.php)._
