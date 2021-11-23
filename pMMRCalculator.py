@@ -3,7 +3,7 @@ import sys, argparse, json, os
 from operator import add
 from collections import OrderedDict
 
-VERSION = "1.0.5"
+VERSION = "1.1.0"
 
 ## A function to return the number of lines of a file
 def file_len(fname):
@@ -139,8 +139,12 @@ print ("Ind1","Ind2","nSNPs","nMismatch","pMismatch", sep="\t",file=outFile)
 for ind1 in range(0,len(Inds)-1):
     for ind2 in range(ind1+1,len(Inds)):
         newidx=ind2-(ind1+1)
-        print (Inds[ind1],Inds[ind2], ntot[ind1][newidx], pMMRTable[ind1][newidx], "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx]), sep="\t", file=outFile)
-        data[Inds[ind1]+"-"+Inds[ind2]]={"nSNPs" : ntot[ind1][newidx], "nMismatch" : pMMRTable[ind1][newidx], "pMismatch" : "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx])}
+        if ntot[ind1][newidx] == 0:
+            print (Inds[ind1],Inds[ind2], ntot[ind1][newidx], pMMRTable[ind1][newidx], "NA", sep="\t", file=outFile)
+            data[Inds[ind1]+"-"+Inds[ind2]]={"nSNPs" : ntot[ind1][newidx], "nMismatch" : pMMRTable[ind1][newidx], "pMismatch" : "NA"}
+        else:
+            print (Inds[ind1],Inds[ind2], ntot[ind1][newidx], pMMRTable[ind1][newidx], "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx]), sep="\t", file=outFile)
+            data[Inds[ind1]+"-"+Inds[ind2]]={"nSNPs" : ntot[ind1][newidx], "nMismatch" : pMMRTable[ind1][newidx], "pMismatch" : "{:.5f}".format(pMMRTable[ind1][newidx]/ntot[ind1][newidx])}
 # print (Inds[1])
 # print("INDS: ",linesInd, file=sys.stdout)
 # print("SNPs: ",linesSnp, file=sys.stdout)
